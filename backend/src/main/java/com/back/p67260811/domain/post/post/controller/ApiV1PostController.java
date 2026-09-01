@@ -64,14 +64,12 @@ public class ApiV1PostController {
     @Transactional
     public RsData<PostDto> write(
             @Valid @RequestBody PostWriteReqBody reqBody,
-            @RequestParam String username,
-            @RequestParam String password
+            @RequestParam String apiKey
     ) {
 
-        Member actor = memberService.findByUsername(username).get();
-        //비밀번호 체크 되면 등록되게끔
-        if(!actor.getPassword().equals(password)) throw new ServiceException("401-1", "비밀번호가 일치하지 않습니다.");
-
+        Member actor = memberService.findByApiKey(apiKey).orElseThrow(
+                () -> new ServiceException("401-1","해당키는 없어여")
+        );
         Post post = postService.write(actor,reqBody.title, reqBody.content);
         return new RsData<>(
                 "201-1",
