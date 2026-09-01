@@ -1,22 +1,25 @@
 package com.back.p67260811.domain.post.post.exception;
 
+import com.back.p67260811.global.dto.RsData;
 
 public class ServiceException extends RuntimeException {
 
-    private String resultCode;
-    private String msg;
+    private RsData rsData;
 
     public ServiceException(String resultCode, String msg) {
-        super("%s : %s".formatted(resultCode, msg));
-        this.resultCode = resultCode;
-        this.msg = msg;
+        super(msg);
+        this.rsData = new RsData(
+                resultCode,
+                msg
+        );
     }
 
     public String getResultCode() {
-        return resultCode;
+        return rsData.getResultCode();
     }
 
     public String getMsg() {
-        return msg;
+        return rsData.getMsg();
     }
+
 }
