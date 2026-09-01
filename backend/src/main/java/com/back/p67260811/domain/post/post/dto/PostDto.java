@@ -9,7 +9,10 @@ public record PostDto(
         LocalDateTime createDate,
         LocalDateTime modifyDate,
         String title,
-        String content
+        String content,
+       // Member author 이대로 하면 안됨 그대로 노출됨
+        String nickname,
+        String username
 ) {
     public PostDto(Post post) {
         this(
@@ -17,7 +20,9 @@ public record PostDto(
                 post.getCreateDate(),
                 post.getModifyDate(),
                 post.getTitle(),
-                post.getContent()
+                post.getContent(),
+                post.getAuthor().getNickname(),
+                post.getAuthor().getUsername()
         );
     }
 }
