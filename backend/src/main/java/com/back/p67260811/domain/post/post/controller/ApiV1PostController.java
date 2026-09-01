@@ -4,6 +4,7 @@ import com.back.p67260811.domain.member.member.entity.Member;
 import com.back.p67260811.domain.member.member.service.MemberService;
 import com.back.p67260811.domain.post.post.dto.PostDto;
 import com.back.p67260811.domain.post.post.entity.Post;
+import com.back.p67260811.domain.post.post.exception.ServiceException;
 import com.back.p67260811.domain.post.post.service.PostService;
 import com.back.p67260811.global.dto.RsData;
 import jakarta.validation.Valid;
@@ -69,9 +70,7 @@ public class ApiV1PostController {
 
         Member actor = memberService.findByUsername(username).get();
         //비밀번호 체크 되면 등록되게끔
-        if(!actor.getPassword().equals(password)){
-            throw new IllegalArgumentException("비번달라용");
-        }
+        if(!actor.getPassword().equals(password)) throw new ServiceException("401-1", "비밀번호가 일치하지 않습니다.");
 
         Post post = postService.write(actor,reqBody.title, reqBody.content);
         return new RsData<>(
