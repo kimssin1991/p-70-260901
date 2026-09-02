@@ -6,6 +6,8 @@ import com.back.p67260811.domain.post.post.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.UUID;
+
 
 @Service
 @RequiredArgsConstructor
@@ -18,18 +20,19 @@ public class MemberService {
     }
 
     public Member join(String username, String password, String nickname) {
-        findByUsername(username).ifPresent(m -> {
-            throw new ServiceException("409-1", "이미 사용중인 아이디입니다.");
-        });
-
-        Member member = new Member(username, password, nickname);
-        return memberRepository.save(member);
+        return join(username, password, nickname, null);
     }
 
     public Member join(String username, String password, String nickname, String apiKey) {
-        findByUsername(username).ifPresent(m -> {
-            throw new ServiceException("409-1", "이미 사용중인 아이디입니다.");
-        });
+
+        //중복체크추가
+        if(memberRepository.findByUsername(username).isPresent()){
+            throw new ServiceException("409-1","이미 사용중인 아이디에여");
+        }
+
+        if(apiKey == null) {
+            apiKey = UUID.randomUUID().toString();
+        }
 
         Member member = new Member(username, password, nickname, apiKey);
         return memberRepository.save(member);
