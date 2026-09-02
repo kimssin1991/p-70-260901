@@ -64,10 +64,10 @@ public class ApiV1PostController {
     @Transactional
     public RsData<PostDto> write(
             @Valid @RequestBody PostWriteReqBody reqBody,
-            @RequestParam String apiKey
+            @RequestHeader String apiKey
     ) {
-
-        Member actor = memberService.findByApiKey(apiKey).orElseThrow(
+        String authorizaiton = apiKey.substring(7);
+        Member actor = memberService.findByApiKey(authorizaiton).orElseThrow(
                 () -> new ServiceException("401-1","해당키는 없어여")
         );
         Post post = postService.write(actor,reqBody.title, reqBody.content);
