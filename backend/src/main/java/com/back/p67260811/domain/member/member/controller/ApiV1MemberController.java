@@ -4,6 +4,7 @@ package com.back.p67260811.domain.member.member.controller;
 import com.back.p67260811.domain.member.member.dto.MemberDto;
 import com.back.p67260811.domain.member.member.entity.Member;
 import com.back.p67260811.domain.member.member.service.MemberService;
+import com.back.p67260811.domain.post.post.exception.ServiceException;
 import com.back.p67260811.global.dto.RsData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -45,7 +46,10 @@ public class ApiV1MemberController {
     public RsData<MemberDto> join(
             @RequestBody @Valid JoinReqBody reqBody
     ) {
-
+        memberService.findByUsername(reqBody.username)
+                .ifPresent(m -> {
+                    throw new ServiceException("409-1", "이미 사용중인 아이디입니다.");
+                });
         Member member = memberService.join(reqBody.username, reqBody.password, reqBody.nickname);
 
         return new RsData(
